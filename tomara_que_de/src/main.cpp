@@ -4,13 +4,28 @@
 #include <ArduinoJson.h>
 #include <WiFi.h>
  
-#define AWS_IOT_PUBLISH_TOPIC   "nitro/pub"
+#define AWS_IOT_PUBLISH_TOPIC   "nitro/pub/portao"
 #define AWS_IOT_SUBSCRIBE_TOPIC "nitro/sub"
 
 WiFiClientSecure net = WiFiClientSecure();
 PubSubClient client(net);
 
 void messageHandler(char* topic, byte* payload, unsigned int lenght);
+void connectAWS();
+void publishMessage();
+
+void setup()
+{
+  Serial.begin(115200);
+  connectAWS();
+}
+ 
+void loop()
+{ 
+  publishMessage();
+  client.loop();
+  delay(1000);
+}
 
 void messageHandler(char* topic, byte* payload, unsigned int length)
 {
@@ -51,18 +66,15 @@ void connectAWS()
  
   while (!client.connect(THINGNAME))
   {
-    Serial.print("loop0");
     Serial.println(".");
     delay(10);
   }
-  Serial.println("aqui1");
 
   if (!client.connected())
   {
     Serial.println("AWS IoT Timeout!");
   }
 
-  Serial.println("aqui2");
  
   // Subscribe to a topic
   client.subscribe(AWS_IOT_SUBSCRIBE_TOPIC);
@@ -79,24 +91,4 @@ void publishMessage()
   serializeJson(doc, jsonBuffer); // print to client
  
   client.publish(AWS_IOT_PUBLISH_TOPIC, jsonBuffer);
-}
- 
-void setup()
-{
-  Serial.begin(115200);
-  connectAWS();
-}
- 
-void loop()
-{
-
-  Serial.print(F("Humidity: "));
-  Serial.print(1);
-  Serial.print(F("%  Temperature: "));
-  Serial.print(2);
-  Serial.println(F("°C "));
- 
-  publishMessage();
-  client.loop();
-  delay(1000);
 }
