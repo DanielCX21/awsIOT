@@ -1,14 +1,14 @@
 #include <pgmspace.h>
- 
+
 #define SECRET
-#define THINGNAME "HUB_ONE"                         //change this
- 
-const char WIFI_SSID[] = "Daniel";               //change this
-const char WIFI_PASSWORD[] = "12345678";           //change this
-const char AWS_IOT_ENDPOINT[] = "a358pitee9rjfx-ats.iot.sa-east-1.amazonaws.com";       //change this
- 
-// Amazon Root CA 1
-static const char AWS_CERT_CA[] PROGMEM = R"EOF(
+#define THINGNAME "HUB_ONE"
+
+const char *ssid = "DANIEL";
+const char *password = "98712366";
+const char *awsEndpoint = "a358pitee9rjfx-ats.iot.sa-east-1.amazonaws.com";
+
+// Certificados e chave privada (armazenados em PROGMEM)
+static const char ca_cert[] PROGMEM = R"EOF(
 -----BEGIN CERTIFICATE-----
 MIIDQTCCAimgAwIBAgITBmyfz5m/jAo54vB4ikPmljZbyjANBgkqhkiG9w0BAQsF
 ADA5MQswCQYDVQQGEwJVUzEPMA0GA1UEChMGQW1hem9uMRkwFwYDVQQDExBBbWF6
@@ -27,12 +27,11 @@ U5PMCCjjmCXPI6T53iHTfIUJrU6adTrCC2qJeHZERxhlbI1Bjjt/msv0tadQ1wUs
 N+gDS63pYaACbvXy8MWy7Vu33PqUXHeeE6V/Uq2V8viTO96LXFvKWlJbYK8U90vv
 o/ufQJVtMVT8QtPHRh8jrdkPSHCa2XV4cdFyQzR1bldZwgJcJmApzyMZFo6IQ6XU
 5MsI+yMRQ+hDKXJioaldXgjUkK642M4UwtBV8ob2xJNDd2ZhwLnoQdeXeGADbkpy
-rqXRfboQnoZsG4q5WTP468SQvvG5 
+rqXRfboQnoZsG4q5WTP468SQvvG5
 -----END CERTIFICATE-----
-)EOF";
- 
-// Device Certificate                                               //change this
-static const char AWS_CERT_CRT[] PROGMEM = R"KEY(
+  )EOF";
+  
+static const char client_cert[] PROGMEM = R"EOF(
 -----BEGIN CERTIFICATE-----
 MIIDWTCCAkGgAwIBAgIUek//AQcj96DOq5ywa5ahwq+EH7kwDQYJKoZIhvcNAQEL
 BQAwTTFLMEkGA1UECwxCQW1hem9uIFdlYiBTZXJ2aWNlcyBPPUFtYXpvbi5jb20g
@@ -53,12 +52,9 @@ K9WLfLEJ370iavJ3bNuNqTeOz+e6Bq3sFkJDlggBf0XzqdsYYgT3zkqQqn+lJ4Wz
 SiLWwBs+kuAX/RScJX0iNnvhSbi15XG9MTjFQr9tYt+nrJtZZkurccUZEirSINji
 OvOrBLvMVv13PF9Fy382ZjwZ6J+MR3hjcTDN6lToaUDXOKPhzj+qmZsdSUt1
 -----END CERTIFICATE-----
- 
- 
-)KEY";
- 
-// Device Private Key                                               //change this
-static const char AWS_CERT_PRIVATE[] PROGMEM = R"KEY(
+  )EOF";
+  
+static const char client_key[] PROGMEM = R"EOF(
 -----BEGIN RSA PRIVATE KEY-----
 MIIEogIBAAKCAQEAvN3Cgwzp/Yp5LX9/CybfbanSRfssEtfoSKOUE5IFxJfbuTgS
 y/rFXSuxiQNNO0LOr7RUdUiPl6slwZ+xC/jl5770UPBsWxBcWePNM/qAqCvb+MrE
@@ -86,6 +82,4 @@ AyoxAoGAAuocI27ObdN8P7zdSlZitUgutr2UUz5HpOnlAylmYLGhiaVR4jXGhkWR
 bmluXhLHeOByeS8xtvLm20r77PG2Q810xo7iG5Oq6EN7In8G4RgyHVdKkMlM8K0B
 JCfQUboYjdXN6YstmasSNuyf9d8xfZ6GfNzjdmbnbSVrSl9ttss=
 -----END RSA PRIVATE KEY-----
- 
- 
-)KEY";
+  )EOF";
